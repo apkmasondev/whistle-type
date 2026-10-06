@@ -97,7 +97,10 @@ removed from *Settings → Apps*. On first start WhistleType explains and offers
 **Portable:** unzip `WhistleType-<version>-portable-x64.zip` anywhere. Create an empty file `WhistleType.portable`
 next to the exe to keep settings, logs and the model in `.\data`.
 
-The builds are not code-signed yet, so SmartScreen may warn on first launch.
+> **Hobby project.** WhistleType is made by one person in their spare time and is provided as is, without warranty
+> (MIT licence). The builds are **not code-signed**, so Windows SmartScreen may show "Windows protected your PC" on
+> first launch — *More info → Run anyway*. You can verify the download against `SHA256SUMS.txt` from the release
+> (`Get-FileHash` in PowerShell) or build it from source.
 
 ### Requirements
 
