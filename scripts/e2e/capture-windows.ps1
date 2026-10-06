@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS  Captures the Settings and Speech models windows (English and Polish) with PrintWindow - only the app's own
            windows are rendered, never the screen. Test-hooks build, throw-away data folder. Windows PowerShell 5.1.
 .EXAMPLE   powershell -NoProfile -ExecutionPolicy Bypass -File scripts\e2e\capture-windows.ps1 -Out docs
@@ -24,17 +24,22 @@ public static class C {
   [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr h, out uint pid);
   [DllImport("user32.dll")] static extern bool GetWindowRect(IntPtr h, out RECT r);
   [DllImport("user32.dll")] static extern bool PrintWindow(IntPtr h, IntPtr hdc, uint flags);
+  [DllImport("dwmapi.dll")] static extern int DwmGetWindowAttribute(IntPtr h, int a, out RECT r, int s);
   [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
   [DllImport("user32.dll")] public static extern IntPtr GetDlgItem(IntPtr h, int id);
   [DllImport("user32.dll")] public static extern IntPtr SendMessage(IntPtr h, uint m, IntPtr w, IntPtr l);
   public struct RECT { public int L, T, R, B; }
   public static uint Pid;
   public static IntPtr Find(string cls) { IntPtr f = IntPtr.Zero; EnumWindows((h,l)=>{ var c=new StringBuilder(256); GetClassName(h,c,256); uint pid; GetWindowThreadProcessId(h, out pid); if(c.ToString()==cls && IsWindowVisible(h) && pid==Pid){f=h;return false;} return true;}, IntPtr.Zero); return f; }
+  // PrintWindow renders the whole window rect, including the invisible resize borders (black); crop to the
+  // visible frame reported by DWM (DWMWA_EXTENDED_FRAME_BOUNDS = 9).
   public static void Capture(IntPtr h, string path) {
     RECT r; GetWindowRect(h, out r);
+    RECT v; if (DwmGetWindowAttribute(h, 9, out v, 16) != 0) v = r;
     using (var b = new System.Drawing.Bitmap(r.R - r.L, r.B - r.T)) {
       using (var g = System.Drawing.Graphics.FromImage(b)) { var dc = g.GetHdc(); PrintWindow(h, dc, 2); g.ReleaseHdc(dc); }
-      b.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+      var crop = new System.Drawing.Rectangle(v.L - r.L, v.T - r.T, v.R - v.L, v.B - v.T);
+      using (var c = b.Clone(crop, b.PixelFormat)) c.Save(path, System.Drawing.Imaging.ImageFormat.Png);
     }
   }
 }
