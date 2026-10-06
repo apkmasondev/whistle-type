@@ -64,7 +64,7 @@ to Whisper when it runs on the GPU.
 | Insertion | Clipboard + Ctrl+V with **full clipboard backup and restore**. The text is offered with delayed rendering, so WhistleType knows exactly when the target app read it, and reads by clipboard monitors before the paste are declined (the dictation does not end up in clipboard history). Alternatives: Shift+Insert, Ctrl+Shift+V, or typing characters without the clipboard. |
 | Text | Only safe cleanup: trim and collapse whitespace; control characters (newline, Esc) are never inserted, so a dictation cannot execute a terminal command. *Raw transcription* inserts Whistle's output as-is (apart from control characters). |
 
-Project page: **[https://apkmasondev.github.io/whistle-type-site/](https://apkmasondev.github.io/whistle-type-site/)**
+Project page: **[https://apkmason.dev/whistle-type-site/](https://apkmason.dev/whistle-type-site/)**
 
 Architecture, the research behind it and every source are in [RESEARCH.md](RESEARCH.md).
 Measurements are in [PERFORMANCE.md](PERFORMANCE.md), the review in [AUDIT.md](AUDIT.md).
