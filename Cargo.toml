@@ -1,0 +1,93 @@
+[package]
+name = "whistletype"
+version = "1.1.0"
+edition = "2021"
+description = "Local push-to-talk dictation for Windows: Whistle (FAST, CPU) and Whisper (ACCURATE, NVIDIA GPU)"
+license = "MIT"
+homepage = "https://apkmasondev.github.io/whistle-type-site/"
+repository = "https://github.com/apkmasondev/whistle-type"
+publish = false
+build = "build.rs"
+rust-version = "1.80"
+
+[lib]
+name = "whistletype"
+path = "src/lib.rs"
+
+[[bin]]
+name = "WhistleType"
+path = "src/main.rs"
+
+# Developer tool: transcribe WAV files through the exact same pipeline and print timings. Not shipped.
+[[bin]]
+name = "wt-bench"
+path = "src/bin/wt-bench.rs"
+
+[features]
+# End-to-end test hooks (accept injected hotkey events, read audio from a WAV instead of the microphone).
+# Never enabled in release/installer builds.
+test-hooks = []
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+windows-core = "0.62"
+windows-numerics = "0.3"
+# reading the whisper.cpp CUDA archive (deflate only, pure Rust)
+zip = { version = "4", default-features = false, features = ["deflate-flate2-zlib-rs"] }
+
+[dependencies.windows]
+version = "0.62"
+features = [
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_Globalization",
+    "Win32_Graphics_Direct2D",
+    "Win32_Graphics_Direct2D_Common",
+    "Win32_Graphics_DirectWrite",
+    "Win32_Graphics_Dwm",
+    "Win32_Graphics_Dxgi",
+    "Win32_Graphics_Dxgi_Common",
+    "Win32_Graphics_Gdi",
+    "Win32_Media_Audio",
+    "Win32_Media_KernelStreaming",
+    "Win32_Media_Multimedia",
+    "Win32_Networking_WinHttp",
+    "Win32_Storage_FileSystem",
+    "Win32_System_Com",
+    "Win32_System_Com_StructuredStorage",
+    "Win32_System_DataExchange",
+    "Win32_System_Diagnostics_Debug",
+    "Win32_System_Kernel",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Memory",
+    "Win32_System_Ole",
+    "Win32_System_ProcessStatus",
+    "Win32_System_Registry",
+    "Win32_System_SystemInformation",
+    "Win32_System_SystemServices",
+    "Win32_System_Threading",
+    "Win32_System_Variant",
+    "Win32_UI_Controls",
+    "Win32_UI_Controls_Dialogs",
+    "Win32_UI_HiDpi",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_Shell",
+    "Win32_UI_Shell_Common",
+    "Win32_UI_Shell_PropertiesSystem",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_Devices_FunctionDiscovery",
+    "Win32_Devices_Properties",
+]
+
+[build-dependencies]
+embed-resource = "3"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+debug = false
+panic = "unwind"

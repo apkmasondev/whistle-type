@@ -1,0 +1,45 @@
+# Build output
+/target/
+/dist/
+*.pdb
+
+# Third-party binaries are fetched by scripts/fetch-engine.ps1 (pinned + SHA-256 verified), never committed
+/third_party/*/
+*.dll
+*.cact
+*.whl
+
+# Generated test audio and test/benchmark results
+/tests/audio/generated/
+/tests/results/
+*.wav
+
+# User data, logs, local settings (the app keeps these in %APPDATA% / %LOCALAPPDATA%, but just in case)
+*.log
+settings.json
+/data/
+WhistleType.portable
+
+# Editor / OS noise
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Local environment / secrets
+.env
+.env.*
+*.pfx
+*.p12
+
+# Benchmark audio (downloaded, licence of the source dataset applies)
+/tests/audio/fleurs/
+/tests/audio/cache/
+/tests/audio/user/
+
+# Local tool settings
+.claude/
+*.pem
+*.key
